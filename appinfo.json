@@ -1,0 +1,179 @@
+{
+  "uuid": "2c9d0b84-00e9-41ff-8089-ca64737c0305",
+  "shortName": "Moon",
+  "longName": "Moon Phase",
+  "companyName": "grep0",
+  "versionCode": 1,
+  "versionLabel": "0.0.1",
+  "watchapp": {
+    "watchface": true
+  },
+  "appKeys": {
+    "tz_offset": 10,
+    "hemisphere": 11,
+  },
+  "resources": {
+    "media": [
+      {
+        "type": "png",
+        "name": "MOON_0",
+        "file": "img/m0.png"
+      },
+      {
+        "type": "png",
+        "name": "MOON_1",
+        "file": "img/m1.png"
+      },
+      {
+        "type": "png",
+        "name": "MOON_2",
+        "file": "img/m2.png"
+      },
+      {
+        "type": "png",
+        "name": "MOON_3",
+        "file": "img/m3.png"
+      },
+      {
+        "type": "png",
+        "name": "MOON_4",
+        "file": "img/m4.png"
+      },
+      {
+        "type": "png",
+        "name": "MOON_5",
+        "file": "img/m5.png"
+      },
+      {
+        "type": "png",
+        "name": "MOON_6",
+        "file": "img/m6.png"
+      },
+      {
+        "type": "png",
+        "name": "MOON_7",
+        "file": "img/m7.png"
+      },
+      {
+        "type": "png",
+        "name": "MOON_8",
+        "file": "img/m8.png"
+      },
+      {
+        "type": "png",
+        "name": "MOON_9",
+        "file": "img/m9.png"
+      },
+      {
+        "type": "png",
+        "name": "MOON_10",
+        "file": "img/m10.png"
+      },
+      {
+        "type": "png",
+        "name": "MOON_11",
+        "file": "img/m11.png"
+      },
+      {
+        "type": "png",
+        "name": "MOON_12",
+        "file": "img/m12.png"
+      },
+      {
+        "type": "png",
+        "name": "MOON_13",
+        "file": "img/m13.png"
+      },
+      {
+        "type": "png",
+        "name": "MOON_14",
+        "file": "img/m14.png"
+      },
+      {
+        "type": "png",
+        "name": "MOON_15",
+        "file": "img/m15.png"
+      },
+      {
+        "type": "png",
+        "name": "MOON_16",
+        "file": "img/m16.png"
+      },
+      {
+        "type": "png",
+        "name": "MOON_17",
+        "file": "img/m17.png"
+      },
+      {
+        "type": "png",
+        "name": "MOON_18",
+        "file": "img/m18.png"
+      },
+      {
+        "type": "png",
+        "name": "MOON_19",
+        "file": "img/m19.png"
+      },
+      {
+        "type": "png",
+        "name": "MOON_20",
+        "file": "img/m20.png"
+      },
+      {
+        "type": "png",
+        "name": "MOON_21",
+        "file": "img/m21.png"
+      },
+      {
+        "type": "png",
+        "name": "MOON_22",
+        "file": "img/m22.png"
+      },
+      {
+        "type": "png",
+        "name": "MOON_23",
+        "file": "img/m23.png"
+      },
+      {
+        "type": "png",
+        "name": "MOON_24",
+        "file": "img/m24.png"
+      },
+      {
+        "type": "png",
+        "name": "MOON_25",
+        "file": "img/m25.png"
+      },
+      {
+        "type": "png",
+        "name": "MOON_26",
+        "file": "img/m26.png"
+      },
+      {
+        "type": "png",
+        "name": "MOON_27",
+        "file": "img/m27.png"
+      },
+      {
+        "type": "png",
+        "name": "MOON_28",
+        "file": "img/m28.png"
+      },
+      {
+        "type": "png",
+        "name": "MOON_29",
+        "file": "img/m29.png"
+      },
+      {
+        "type": "png",
+        "name": "MOON_30",
+        "file": "img/m30.png"
+      },
+      {
+        "type": "png",
+        "name": "MOON_31",
+        "file": "img/m31.png"
+      }
+    ]
+  }
+}
