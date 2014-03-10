@@ -2,9 +2,10 @@
   "uuid": "2c9d0b84-00e9-41ff-8089-ca64737c0305",
   "shortName": "Moon",
   "longName": "Moon Phase",
-  "companyName": "grep0",
+  "companyName": "grep",
   "versionCode": 1,
   "versionLabel": "0.0.1",
+  "capabilities": [ "location" ],
   "watchapp": {
     "watchface": true
   },
