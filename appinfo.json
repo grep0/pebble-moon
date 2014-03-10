@@ -6,6 +6,7 @@
   "versionCode": 1,
   "versionLabel": "0.0.1",
   "capabilities": [ "location" ],
+
   "watchapp": {
     "watchface": true
   },
