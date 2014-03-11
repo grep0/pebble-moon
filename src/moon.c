@@ -21,24 +21,31 @@ int tuple_get_int(const Tuple* t) {
   return -1;
 }
 
+// Communication
+
+#define T_KEY_TZ_OFFSET 10
+#define T_KEY_HEMISPHERE 11
+
+static int32_t time_zone = 0; // offset in seconds between current TZ and UTC
+static int8_t hemisphere = 0; // 0=northern hemisphere, 1=southern hemisphere
+
+// Layout
+
 static Window *window;
 
 static TextLayer *tl_unixtime;
 static TextLayer *tl_date;
 static TextLayer *tl_time;
-static BitmapLayer *bl_moon;
 static TextLayer *tl_moonphase;
-
-#define T_KEY_TZ_OFFSET 10
-#define T_KEY_HEMISPHERE 11
-
-static int32_t time_zone = 0;  // UTC by default
-static int8_t hemisphere = 0;  // TODO: pass this from geolocation
+static BitmapLayer *bl_moon;
 
 static char txt_unixtime[20] = "1234567890";
 static char txt_date[20] = "1234-12-12";
 static char txt_time[20] = "12:34:56";
 static char txt_moonphase[20] = "made of cheese?";
+
+static GBitmap* bm_moon = NULL;
+static int bm_moon_index = -1;
 
 static time_t time_utc() {
   return time(NULL) - time_zone;
@@ -72,7 +79,7 @@ static const char *phase_text[] = {
   "Waxing crescent",
   "Waxing gibbous",
   "Waning gibbous",
-  "Wanning crescent",
+  "Waning crescent",
 };
 
 static void set_moonphase_text(double phase) {
@@ -96,18 +103,21 @@ static void set_moonphase_text(double phase) {
   snprintf(txt_moonphase, sizeof(txt_moonphase), "%s %d%%", phase_text[phase_q], phase_pct);
 }
 
+// There are 32 moon phase images in resources; 0 is new moon, 16 is full moon
+#define NUM_MOON_IMAGES 32
 static uint32_t get_bm_moon_resource_id(int ix) {
-  return RESOURCE_ID_MOON_0 + ix;  // FIXME: is it safe? too lazy to make a switch
+  // FIXME: we assume that RESOURCE_ID_MOON_xx are ordered accurdingly
+  return RESOURCE_ID_MOON_0 + ix;
 }
 
-static GBitmap* bm_moon;
-static int bm_moon_index = -1;
-
 static void set_moonphase_bitmap(double phase) {
-  int ix = (int)(phase*32 + 0.5);
-  if (hemisphere) ix = 32 - ix;
-  ix %= 32;
+  // We have 32 
+  int ix = (int)(phase*NUM_MOON_IMAGES + 0.5);
+  // In southern hemisphere, moon phases look "mirrored"
+  if (hemisphere) ix = NUM_MOON_IMAGES - ix;
+  ix %= NUM_MOON_IMAGES;
   if (ix == bm_moon_index) return; // nothing to do
+  // To save RAM, we are only keeping the current moon images
   if (bm_moon) {
     bitmap_layer_set_bitmap(bl_moon, NULL);
     gbitmap_destroy(bm_moon);
@@ -142,8 +152,8 @@ static TextLayer* tl_init(Layer* layer, int y, const char* font, const char* ini
 
 static void window_load(Window *window) {
   Layer* window_layer = window_get_root_layer(window);
-  tl_date      = tl_init(window_layer, 8, FONT_KEY_GOTHIC_24_BOLD, txt_date);
-  tl_time      = tl_init(window_layer, 32, FONT_KEY_GOTHIC_24_BOLD, txt_time);
+  tl_date = tl_init(window_layer, 8, FONT_KEY_GOTHIC_24_BOLD, txt_date);
+  tl_time = tl_init(window_layer, 32, FONT_KEY_GOTHIC_24_BOLD, txt_time);
 
   bl_moon = bitmap_layer_create(GRECT(0, 56, 144, 48));
   bitmap_layer_set_background_color(bl_moon, GColorBlack);
@@ -167,6 +177,18 @@ static void window_unload(Window *window) {
   text_layer_destroy(tl_time);
   text_layer_destroy(tl_date);
   text_layer_destroy(tl_unixtime);
+}
+
+static void persist_load() {
+  // fetch cached info from the persistent storage
+  time_zone = persist_read_int(T_KEY_TZ_OFFSET);
+  hemisphere = persist_read_int(T_KEY_HEMISPHERE);
+  LOG_INFO("Loaded time_zone=%d hemisphere=%d", (int)time_zone, (int)hemisphere);
+}
+
+static void persist_save() {
+  persist_write_int(T_KEY_TZ_OFFSET, time_zone);
+  persist_write_int(T_KEY_HEMISPHERE, hemisphere);  
 }
 
 static void on_second_tick(struct tm* tick_time, TimeUnits units_changed) {
@@ -196,18 +218,14 @@ static void on_message_received(DictionaryIterator* dict, void* ctx) {
     }
   }
   if (changed) {
-    persist_write_int(T_KEY_TZ_OFFSET, time_zone);
-    persist_write_int(T_KEY_HEMISPHERE, hemisphere);
+    persist_save();
     update_time();
     update_moon();
   }
 }
 
 static void init(void) {
-  // fetch time zone info from the persistent storage
-  time_zone = persist_read_int(T_KEY_TZ_OFFSET);
-  hemisphere = persist_read_int(T_KEY_HEMISPHERE);
-
+  persist_load();
   window = window_create();
   window_set_background_color(window, GColorBlack);
   window_set_window_handlers(window, (WindowHandlers) {
@@ -230,9 +248,6 @@ static void deinit(void) {
 
 int main(void) {
   init();
-
-  APP_LOG(APP_LOG_LEVEL_DEBUG, "Done initializing, pushed window: %p", window);
-
   app_event_loop();
   deinit();
 }
